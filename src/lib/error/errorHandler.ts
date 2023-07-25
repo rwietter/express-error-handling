@@ -1,4 +1,9 @@
-import type { NextFunction, Request, Response } from "express";
+import {
+  response,
+  type NextFunction,
+  type Request,
+  type Response,
+} from "express";
 
 interface IError extends Error {
   status: number;
@@ -8,10 +13,15 @@ export const errorHandler = (
   error: IError,
   _request: Request,
   response: Response,
-  _next: NextFunction
+  next: NextFunction
 ) => {
-  const status = error.status || 500;
-  const message = error.message || "Something went wrong";
+  if (response.headersSent) {
+    return next(error);
+  }
 
-  return response.status(status).json({ message });
-}
+  return response.status(error.status || 500).json({
+    success: false,
+    name: error.name,
+    message: error.message,
+  });
+};
