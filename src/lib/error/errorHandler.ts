@@ -1,5 +1,4 @@
 import {
-  response,
   type NextFunction,
   type Request,
   type Response,
