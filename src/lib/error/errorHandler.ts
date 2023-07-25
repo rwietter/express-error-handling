@@ -1,8 +1,4 @@
-import {
-  type NextFunction,
-  type Request,
-  type Response,
-} from "express";
+import type { NextFunction, Request, Response } from "express";
 
 interface IError extends Error {
   status: number;
