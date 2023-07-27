@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
+import { logger } from "../logs/logger";
 
 interface IError extends Error {
   status: number;
@@ -13,6 +14,8 @@ export const errorHandler = (
   if (response.headersSent) {
     return next(error);
   }
+
+  logger.error(error);
 
   return response.status(error.status || 500).json({
     success: false,

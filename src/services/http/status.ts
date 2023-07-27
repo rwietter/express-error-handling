@@ -1,4 +1,4 @@
-import { CustomError } from "../error/customError";
+import { CustomError } from "../../lib/error/customError";
 
 export class Http {
   public static readonly BAD_REQUEST = 400;

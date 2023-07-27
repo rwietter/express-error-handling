@@ -1,30 +1,45 @@
 import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
-import { userSchema } from "../schemas/user.schema";
-import { Http } from "../../lib/http/status";
+import { createUserSchema } from "../schemas/user.schema";
+import { Http } from "../../services/http/status";
+import { logger } from "../../lib/logs/logger";
 
-const db = [] as { name: string; email: string }[];
+type DB = {
+  name: string;
+  email: string;
+}
+
+const db: DB[] = [] 
 
 export class User {
   constructor() {}
 
   async create(request: Request, response: Response, next: NextFunction) {
     try {
-      const { name, email } = await userSchema.parseAsync(request.body);
+      const { name, email } = await createUserSchema.parseAsync(request.body);
 
-      const user = db.find((user) => user.email === email);
+      Promise.reject(new Error("test"));
+
+      const user = db.find((user) => {
+        return user.email === email;
+      });
 
       if (user) {
-        return next(Http.conflict("User already exists"));
+        return response.status(Http.CONFLICT).json({
+          message: "User already exists",
+        });
+      }
+
+      // if parseAsync fails, it will return a bad request
+      if(!name || !email) {
+        return response.status(Http.BAD_REQUEST).json({
+          message: "Name and email are required",
+        })
       }
 
       db.push({ name, email });
 
-      const data = {
-        message: "User created successfully",
-      };
-
-      return response.status(Http.OK).json(data);
+      return response.status(Http.OK).json(db);
     } catch (error: any) {
       if (error instanceof z.ZodError) {
         return next(
