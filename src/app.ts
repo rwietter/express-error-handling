@@ -2,6 +2,7 @@
  * This is a helper function that wraps the async functions in a try/catch block
  */
 require("express-async-errors");
+import './lib/config/dotenv';
 import express from "express";
 
 import { router } from "./routes/routes";
