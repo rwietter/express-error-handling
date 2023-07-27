@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { logger } from "../logs/logger";
+import { logger } from "../logger/logger";
 
 interface IError extends Error {
   status: number;

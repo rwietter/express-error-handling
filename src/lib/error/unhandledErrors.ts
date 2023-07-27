@@ -1,4 +1,4 @@
-import { logger } from "../logs/logger";
+import { logger } from "../logger/logger";
 
 /**
  * Catch All Uncaught Exceptions.

@@ -1,5 +1,5 @@
 import { app } from "./app";
-import { logger } from "./lib/logs/logger";
+import { logger } from "./lib/logger/logger";
 
 const start = (): void => {
   try {

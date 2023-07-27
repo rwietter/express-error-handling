@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
 import { createUserSchema } from "../schemas/user.schema";
 import { Http } from "../../services/http/status";
-import { logger } from "../../lib/logs/logger";
+import { logger } from "../../lib/logger/logger";
 
 type DB = {
   name: string;
