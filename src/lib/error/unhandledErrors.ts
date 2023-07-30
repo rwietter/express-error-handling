@@ -1,4 +1,6 @@
+import * as Sentry from "@sentry/node";
 import { logger } from "../logger/logger";
+import { isProduction } from '../helpers/isProduction'
 
 /**
  * Catch All Uncaught Exceptions.
@@ -7,12 +9,16 @@ import { logger } from "../logger/logger";
  */
 export const UnhandledErrors = () => {
   process.on("unhandledRejection", (error: Error) => {
+    if (isProduction()) Sentry.captureException(error);
+
     logger.error(error);
   });
 
   process.on("uncaughtException", (error) => {
     logger.fatal(error, "uncaught exception detected");
-    
+
+    if (isProduction()) Sentry.captureException(error);
+
     // exit immediately and generate a core dump file
     setTimeout(() => {
       process.abort();

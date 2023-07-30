@@ -1,6 +1,6 @@
 import { CustomError } from "../../lib/error/customError";
 
-export class Http {
+export abstract class Http {
   public static readonly BAD_REQUEST = 400;
   public static readonly NOT_FOUND = 404;
   public static readonly INTERNAL_SERVER_ERROR = 500;
@@ -20,8 +20,6 @@ export class Http {
   public static readonly PAYLOAD_TOO_LARGE = 413;
   public static readonly UNSUPPORTED_MEDIA_TYPE = 415;
   
-  private constructor() {}
-
   public static badRequest(message: string) {
     return new CustomError(message, Http.BAD_REQUEST);
   }

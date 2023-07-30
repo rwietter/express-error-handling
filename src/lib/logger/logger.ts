@@ -27,6 +27,4 @@ export const logger = pino(
   pino.destination(`${logPath}/dump.log`)
 );
 
-export const loggerHttpMiddleware = pinoHttp({
-  logger,
-});
+export const loggerHttp = pinoHttp();
