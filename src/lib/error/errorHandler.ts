@@ -2,27 +2,20 @@ import * as Sentry from "@sentry/node";
 import type { NextFunction, Request, Response } from "express";
 import { logger } from "../logger/logger";
 import { isProduction } from '../helpers/isProduction'
-import { Http } from "../../services/http/status";
-
-interface IError extends Error {
-  status: number;
-}
+import { HttpStatus, HttpStatusText } from "../../services/http/status";
 
 export const errorHandler = (
-  error: IError,
-  _request: Request,
+  error: Error,
+  request: Request,
   response: Response,
   next: NextFunction
 ) => {
-  if (isProduction() && error?.status === Http.INTERNAL_SERVER_ERROR) {
-    Sentry.captureException(error);
-  }
+  if (isProduction()) Sentry.captureException(error);
 
   logger.error(error);
 
-  return response.status(error.status || 500).json({
-    success: false,
-    name: error.name,
-    message: error.message,
+  return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+    name: HttpStatusText.INTERNAL_SERVER_ERROR,
+    message: 'Internal Server Error'
   });
 };

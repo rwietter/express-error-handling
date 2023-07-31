@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
 import { createUserSchema } from "../schemas/user.schema";
-import { Http } from "../../services/http/status";
+import { Message } from "../../services/http/messages";
+import { HttpStatus, HttpStatusText } from "../../services/http/status";
 
 type DB = {
   name: string;
@@ -22,21 +23,25 @@ export class User {
       });
 
       if (user) {
-        return response.status(Http.CONFLICT).json({
-          message: "User already exists",
+        return response.status(HttpStatus.CONFLICT).json({
+          name: HttpStatusText.CONFLICT,
+          message: Message.USER_EXISTS
         });
       }
 
       db.push({ name, email });
 
-      return response.status(Http.OK).json(db);
+      return response.status(HttpStatus.CREATED).json({
+        message: Message.USER_CREATED,
+      });
     } catch (error: any) {
       if (error instanceof z.ZodError) {
-        return next(
-          Http.badRequest(error.errors.map((e) => e.message).join(", "))
-        );
+        return response.status(HttpStatus.BAD_REQUEST).json({
+          name: HttpStatusText.BAD_REQUEST,
+          message: error.errors.map((e) => e.message).join(", "),
+        });
       }
-      return next(Http.internalServerError(error.message));
+      next(error);
     }
   }
 }
